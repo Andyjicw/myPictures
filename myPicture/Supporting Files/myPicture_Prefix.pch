@@ -1,0 +1,53 @@
+//
+//  myPicture_Prefix.pch
+//  myPicture
+//
+//  Created by andy on 16/4/29.
+//  Copyright © 2016年 andy. All rights reserved.
+//
+
+#ifndef myPicture_Prefix_pch
+#define myPicture_Prefix_pch
+
+#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+#import <Availability.h>
+
+#import "DB.h"
+#import "URL.h"
+#import "POST.h"
+#import "UIImageView+WebCache.h"
+
+#import "MMDrawerController.h"
+#import "MMdrawerVisualState.h"
+#import "MMDrawerBarButtonItem.h"
+#import "UIViewController+MMDrawerController.h"
+
+/**
+ *  @author andy, 16-05-05 22:05:35
+ *
+ *  @brief 设备判断
+ */
+
+#define IS_IPAD (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+#define IS_IPHONE (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone)
+#define IS_RETINA ([[UIScreen mainScreen] scale] >= 2.0)
+
+#define IS_IOS7  ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7)
+
+#define SCREEN_WIDTH ([[UIScreen mainScreen] bounds].size.width)
+#define SCREEN_HEIGHT ([[UIScreen mainScreen] bounds].size.height)
+#define SCREEN_MAX_LENGTH (MAX(SCREEN_WIDTH, SCREEN_HEIGHT))
+#define SCREEN_MIN_LENGTH (MIN(SCREEN_WIDTH, SCREEN_HEIGHT))
+
+#define IS_IPHONE_4_OR_LESS (IS_IPHONE && SCREEN_MAX_LENGTH < 568.0)
+#define IS_IPHONE_5 (IS_IPHONE && SCREEN_MAX_LENGTH == 568.0)
+#define IS_IPHONE_6 (IS_IPHONE && SCREEN_MAX_LENGTH == 667.0)
+#define IS_IPHONE_6P (IS_IPHONE && SCREEN_MAX_LENGTH == 736.0)
+
+#define DEVICE_HEIGHT_RATIO (IS_IPHONE_6P ? 1.29375 : ( IS_IPHONE_6 ? 1.17187 : 1))
+
+#define MAIN_COLOR [UIColor colorWithRed:0.357 green:0.725 blue:0.694 alpha:1.000]
+
+#endif /* myPicture_Prefix_pch */
+
