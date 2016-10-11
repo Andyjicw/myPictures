@@ -52,7 +52,7 @@ static NSString *kcellIdentifier   = @"CollectionViewCell";
     [self getDataFromNet];
 }
 - (void) setDataInDB:(id) result {
-    
+    UIColor *xx = [UIColor redColor];
     DB *db = [[DB alloc] init];
     if (_collection.mj_footer.isRefreshing) {
         [db DBSetTablePicture:result isDel:false];
