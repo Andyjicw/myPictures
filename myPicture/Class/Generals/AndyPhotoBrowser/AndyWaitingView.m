@@ -2,6 +2,8 @@
 //  AndyWaitingView.m
 //  myPicture
 //
+//  Author Andyjicw 479003573@qq.com
+//
 //  Created by andy on 16/4/29.
 //  Copyright © 2016年 andy. All rights reserved.
 //
@@ -35,11 +37,9 @@
 
 - (void)drawRect:(CGRect)rect {
     CGContextRef ctx = UIGraphicsGetCurrentContext();
-    
     CGFloat xCenter = rect.size.width * 0.5;
     CGFloat yCenter = rect.size.height * 0.5;
     [[UIColor whiteColor] set];
-    
     switch (self.mode) {
         case AndyWaitingViewModePieDiagram:
         {
@@ -57,7 +57,6 @@
             CGFloat to = - M_PI * 0.5 + self.progress * M_PI * 2 + 0.001; // 初始值
             CGContextAddArc(ctx, xCenter, yCenter, radius, - M_PI * 0.5, to, 1);
             CGContextClosePath(ctx);
-            
             CGContextFillPath(ctx);
         }
             break;

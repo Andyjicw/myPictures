@@ -2,6 +2,8 @@
 //  AppDelegate.h
 //  myPicture
 //
+//  Author Andyjicw 479003573@qq.com
+//
 //  Created by andy on 16/4/29.
 //  Copyright © 2016年 andy. All rights reserved.
 //
@@ -11,8 +13,7 @@
 
 @class MMDrawerController;
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate, WXApiDelegate>
-{
+@interface AppDelegate : UIResponder <UIApplicationDelegate, WXApiDelegate> {
 @private
     MMDrawerController *drawerController;
 }

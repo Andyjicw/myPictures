@@ -2,6 +2,8 @@
 //  AndyPhotoBrowser.m
 //  myPicture
 //
+//  Author Andyjicw 479003573@qq.com
+//
 //  Created by andy on 16/4/29.
 //  Copyright © 2016年 andy. All rights reserved.
 //
@@ -9,14 +11,11 @@
 #import "AndyPhotoBrowser.h"
 #import <UIImageView+WebCache.h>
 #import "AndyBrowserImageView.h"
-
 #import "AndyPhotoBrowserConfig.h"
-
 #import "WXApiObject.h"
 #import "WXApi.h"
 
 @implementation AndyPhotoBrowser {
-    
     UIScrollView            *_scrollView;
     BOOL                    _hasShowedFistView;
     UILabel                 *_indexLabel;
@@ -33,9 +32,6 @@
     }
     return self;
 }
-
-
-
 
 - (void)dealloc {
     [[UIApplication sharedApplication].keyWindow removeObserver:self forKeyPath:@"frame"];
@@ -62,7 +58,7 @@
     _indexLabel = indexLabel;
     [self addSubview:indexLabel];
     
-    //2.保存按钮
+    // 2.保存按钮
     UIButton *saveButton = [[UIButton alloc] init];
     [saveButton setTitle:@"保存" forState:UIControlStateNormal];
     [saveButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -73,7 +69,7 @@
     _saveButton = saveButton;
     [self addSubview:saveButton];
     
-    //3.分享按钮
+    // 3.分享按钮
     UIButton *shareButton = [[UIButton alloc] init];
     [shareButton setTitle:@"分享" forState:UIControlStateNormal];
     [shareButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -84,13 +80,11 @@
     _shareButton = shareButton;
     [self addSubview:shareButton];
 }
-- (void) shareURL {
+- (void)shareURL {
     int index = _scrollView.contentOffset.x / _scrollView.bounds.size.width;
     UIImageView *currentImageView = _scrollView.subviews[index];
-    
     WXImageObject *ext = [WXImageObject object];
     ext.imageData = UIImagePNGRepresentation(currentImageView.image);
-    
     WXMediaMessage *message = [WXMediaMessage message];
     message.title = @"1";
     message.description = @"1";
@@ -99,7 +93,6 @@
     message.messageAction = @"1";
     message.mediaTagName = @"1";
     [message setThumbImage:currentImageView.image];
-    
     
     SendMessageToWXReq *req = [[SendMessageToWXReq alloc] init];
     req.bText = NO;
@@ -111,12 +104,10 @@
 - (void)saveImage {
     int index = _scrollView.contentOffset.x / _scrollView.bounds.size.width;
     UIImageView *currentImageView = _scrollView.subviews[index];
-    
     UIImageWriteToSavedPhotosAlbum(currentImageView.image, self, @selector(image:didFinishSavingWithError:contextInfo:), NULL);
 }
 
 - (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo {
-    
     UILabel *label = [[UILabel alloc] init];
     label.textColor = [UIColor whiteColor];
     label.backgroundColor = [UIColor colorWithRed:0.1f green:0.1f blue:0.1f alpha:0.90f];
@@ -130,7 +121,7 @@
     [[UIApplication sharedApplication].keyWindow bringSubviewToFront:label];
     if (error) {
         label.text = AndyPhotoBrowserSaveImageFailText;
-    }   else {
+    } else {
         label.text = AndyPhotoBrowserSaveImageSuccessText;
     }
     [label performSelector:@selector(removeFromSuperview) withObject:nil afterDelay:1.0];
@@ -143,28 +134,23 @@
     _scrollView.showsVerticalScrollIndicator = NO;
     _scrollView.pagingEnabled = YES;
     [self addSubview:_scrollView];
-    
     for (int i = 0; i < self.imageCount; i++) {
         AndyBrowserImageView *imageView = [[AndyBrowserImageView alloc] init];
         imageView.tag = i;
-        
         // 单击图片
-        UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(photoClick:)];
-        
+        UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                                    action:@selector(photoClick:)];
         // 双击放大图片
-        UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(imageViewDoubleTaped:)];
+        UITapGestureRecognizer *doubleTap = [[UITapGestureRecognizer alloc] initWithTarget:self
+                                                                                    action:@selector(imageViewDoubleTaped:)];
         doubleTap.numberOfTapsRequired = 2;
         [self addGestureRecognizer:doubleTap];
-        
         [singleTap requireGestureRecognizerToFail:doubleTap];
-        
         [imageView addGestureRecognizer:singleTap];
         [imageView addGestureRecognizer:doubleTap];
         [_scrollView addSubview:imageView];
     }
-    
     [self setupImageOfImageViewForIndex:self.currentImageIndex];
-    
 }
 
 // 加载图片
@@ -183,10 +169,8 @@
 - (void)photoClick:(UITapGestureRecognizer *)recognizer {
     _scrollView.hidden = YES;
     _willDisappear = YES;
-    
     AndyBrowserImageView *currentImageView = (AndyBrowserImageView *)recognizer.view;
     NSInteger currentIndex = currentImageView.tag;
-    
     UIView *sourceView;
     if ([self.sourceImagesContainerView isKindOfClass:[UICollectionView class]]) {
         sourceView = [(UICollectionView *)self.sourceImagesContainerView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:currentIndex inSection:0]];
@@ -194,25 +178,20 @@
         sourceView = self.sourceImagesContainerView.subviews[currentIndex];
     }
     CGRect targetTemp = [self.sourceImagesContainerView convertRect:sourceView.frame toView:self];
-    
     UIImageView *tempView = [[UIImageView alloc] init];
     tempView.contentMode = sourceView.contentMode;
     tempView.clipsToBounds = YES;
     tempView.image = currentImageView.image;
     CGFloat h = (self.bounds.size.width / currentImageView.image.size.width) * currentImageView.image.size.height;
-    
-    if (!currentImageView.image) { // 防止 因imageview的image加载失败 导致 崩溃
+    if (!currentImageView.image) {
+        // 防止 因imageview的image加载失败 导致 崩溃
         h = self.bounds.size.height;
     }
-    
     tempView.bounds = CGRectMake(0, 0, self.bounds.size.width, h);
     tempView.center = self.center;
-    
     [self addSubview:tempView];
-    
     _saveButton.hidden = YES;
     _shareButton.hidden = YES;
-    
     [UIView animateWithDuration:AndyPhotoBrowserHideImageAnimationDuration animations:^{
         tempView.frame = targetTemp;
         self.backgroundColor = [UIColor clearColor];
@@ -233,9 +212,7 @@
     } else {
         scale = 2.0;
     }
-    
     AndyBrowserImageView *view = (AndyBrowserImageView *)recognizer.view;
-    
     [view doubleTapToZommWithScale:scale];
 }
 
@@ -244,27 +221,20 @@
     
     CGRect rect = self.bounds;
     rect.size.width += AndyPhotoBrowserImageViewMargin * 2;
-    
     _scrollView.bounds = rect;
     _scrollView.center = self.center;
-    
     CGFloat y = 0;
     CGFloat w = _scrollView.frame.size.width - AndyPhotoBrowserImageViewMargin * 2;
     CGFloat h = _scrollView.frame.size.height;
-    
     [_scrollView.subviews enumerateObjectsUsingBlock:^(AndyBrowserImageView *obj, NSUInteger idx, BOOL *stop) {
         CGFloat x = AndyPhotoBrowserImageViewMargin + idx * (AndyPhotoBrowserImageViewMargin * 2 + w);
         obj.frame = CGRectMake(x, y, w, h);
     }];
-    
     _scrollView.contentSize = CGSizeMake(_scrollView.subviews.count * _scrollView.frame.size.width, 0);
     _scrollView.contentOffset = CGPointMake(self.currentImageIndex * _scrollView.frame.size.width, 0);
-    
-    
     if (!_hasShowedFistView) {
         [self showFirstImage];
     }
-    
     _indexLabel.center = CGPointMake(self.bounds.size.width * 0.5, 35);
     _saveButton.frame = CGRectMake(0, 0, 50, 25);
     _saveButton.center = CGPointMake(self.bounds.size.width * 0.25, self.bounds.size.height - 35);
@@ -281,8 +251,10 @@
     [window addSubview:self];
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(UIView *)object change:(NSDictionary *)change context:(void *)context
-{
+- (void)observeValueForKeyPath:(NSString *)keyPath
+                      ofObject:(UIView *)object
+                        change:(NSDictionary *)change
+                       context:(void *)context {
     if ([keyPath isEqualToString:@"frame"]) {
         self.frame = object.bounds;
         AndyBrowserImageView *currentImageView = _scrollView.subviews[_currentImageIndex];
@@ -292,27 +264,21 @@
     }
 }
 
-- (void)showFirstImage
-{
+- (void)showFirstImage {
     UIView *sourceView;
     if ([self.sourceImagesContainerView isKindOfClass:[UICollectionView class]]) {
         sourceView = [(UICollectionView *)self.sourceImagesContainerView cellForItemAtIndexPath:[NSIndexPath indexPathForRow:self.currentImageIndex inSection:0]];
     } else {
         sourceView = self.sourceImagesContainerView.subviews[self.currentImageIndex];
     }
-    
     CGRect rect = [self.sourceImagesContainerView convertRect:sourceView.frame toView:self];
     UIImageView *tempView = [[UIImageView alloc] init];
     tempView.image = [self placeholderImageForIndex:self.currentImageIndex];
-    
     [self addSubview:tempView];
-    
     CGRect targetTemp = [_scrollView.subviews[self.currentImageIndex] bounds];
-    
     tempView.frame = rect;
     tempView.contentMode = [_scrollView.subviews[self.currentImageIndex] contentMode];
     _scrollView.hidden = YES;
-    
     [UIView animateWithDuration:AndyPhotoBrowserShowImageAnimationDuration animations:^{
         tempView.center = self.center;
         tempView.bounds = (CGRect){CGPointZero, targetTemp.size};
@@ -340,7 +306,6 @@
 #pragma mark - scrollview代理方法
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     int index = (scrollView.contentOffset.x + _scrollView.bounds.size.width * 0.5) / _scrollView.bounds.size.width;
-    
     // 有过缩放的图片在拖动一定距离后清除缩放
     CGFloat margin = 150;
     CGFloat x = scrollView.contentOffset.x;

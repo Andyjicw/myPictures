@@ -2,6 +2,8 @@
 //  POST.h
 //  myPicture
 //
+//  Author Andyjicw 479003573@qq.com
+//
 //  Created by andy on 16/4/29.
 //  Copyright © 2016年 andy. All rights reserved.
 //
@@ -23,10 +25,10 @@ typedef void(^FailureBlock)(NSError *error);
  *  @param success 成功回调
  *  @param failure 失败回调
  */
-+ (void) withUrl:(NSString *)url
-            body:(NSMutableDictionary *)body
-            head:(NSMutableDictionary *)head
-         success:(SuccessBlock)success
-         failure:(FailureBlock)failure;
++ (void)withUrl:(NSString *)url
+           body:(NSMutableDictionary *)body
+           head:(NSMutableDictionary *)head
+        success:(SuccessBlock)success
+        failure:(FailureBlock)failure;
 
 @end

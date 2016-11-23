@@ -2,12 +2,13 @@
 //  AppDelegate.m
 //  myPicture
 //
+//  Author Andyjicw 479003573@qq.com
+//
 //  Created by andy on 16/4/29.
 //  Copyright © 2016年 andy. All rights reserved.
 //
 
 #import "AppDelegate.h"
-
 #import "MainViewController.h"
 #import "MenuViewController.h"
 
@@ -23,7 +24,6 @@
     
     [self setupThird];
     [self initDrawer];
-    
     return YES;
 }
 

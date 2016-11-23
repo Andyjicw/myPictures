@@ -2,6 +2,8 @@
 //  DBManager.m
 //  myPicture
 //
+//  Author Andyjicw 479003573@qq.com
+//
 //  Created by andy on 16/5/14.
 //  Copyright © 2016年 andy. All rights reserved.
 //
@@ -10,7 +12,7 @@
 
 @implementation DBManager
 
-//获取db的路径
+#pragma mark - 获取db的路径
 - (NSString *)dbPath {
     NSArray *ary          = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentDic = [ary objectAtIndex:0];
@@ -28,17 +30,13 @@
 }
 
 - (id)initWithDB {
-    
     if (self = [super init]) {
         _db = [FMDatabase databaseWithPath:[self dbPath]];
         if ([_db open]) {
-            
             if ([_db executeUpdate:CREATE_TABLE_PICTURE]) {
-                
             } else {
                 NSLog(@"db create table picture faild");
             }
-            
         } else {
             NSLog(@"db open faild");
         }

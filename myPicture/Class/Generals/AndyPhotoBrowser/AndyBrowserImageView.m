@@ -2,6 +2,8 @@
 //  AndyBrowserImageView.m
 //  myPicture
 //
+//  Author Andyjicw 479003573@qq.com
+//
 //  Created by andy on 16/4/29.
 //  Copyright © 2016年 andy. All rights reserved.
 //
@@ -11,14 +13,13 @@
 #import "AndyPhotoBrowserConfig.h"
 
 @implementation AndyBrowserImageView {
-    
-    __weak AndyWaitingView  *_waitingView;
-    BOOL                    _didCheckSize;
-    UIScrollView            *_scroll;
-    UIImageView             *_scrollImageView;
-    UIScrollView            *_zoomingScroolView;
-    UIImageView             *_zoomingImageView;
-    CGFloat                 _totalScale;
+    __weak AndyWaitingView *_waitingView;
+    BOOL                   _didCheckSize;
+    UIScrollView           *_scroll;
+    UIImageView            *_scrollImageView;
+    UIScrollView           *_zoomingScroolView;
+    UIImageView            *_zoomingImageView;
+    CGFloat                _totalScale;
 }
 - (void)dealloc {
     self.image = nil;
@@ -44,9 +45,7 @@
 - (void)layoutSubviews {
     [super layoutSubviews];
     _waitingView.center = CGPointMake(self.frame.size.width * 0.5, self.frame.size.height * 0.5);
-    
     CGSize imageSize = self.image.size;
-    
     if (self.bounds.size.width * (imageSize.height / imageSize.width) > self.bounds.size.height) {
         if (!_scroll) {
             UIScrollView *scroll = [[UIScrollView alloc] init];
@@ -63,20 +62,15 @@
             }
         }
         _scroll.frame = self.bounds;
-        
         CGFloat imageViewH = self.bounds.size.width * (imageSize.height / imageSize.width);
-        
         _scrollImageView.bounds = CGRectMake(0, 0, _scroll.frame.size.width, imageViewH);
         _scrollImageView.center = CGPointMake(_scroll.frame.size.width * 0.5, _scrollImageView.frame.size.height * 0.5);
         _scroll.contentSize = CGSizeMake(0, _scrollImageView.bounds.size.height);
-        
     } else {
-        if (_scroll) [_scroll removeFromSuperview]; // 防止旋转时适配的scrollView的影响
+        // 防止旋转时适配的scrollView的影响
+        if (_scroll) [_scroll removeFromSuperview];
     }
-    
 }
-
-
 
 - (void)setProgress:(CGFloat)progress {
     _progress = progress;
@@ -85,20 +79,17 @@
 }
 
 - (void)setImageWithURL:(NSURL *)url placeholderImage:(UIImage *)placeholder {
-    //    if (self.isloading) {
-    //        return;
-    //    }
+    // if (self.isloading) {
+    //     return;
+    // }
     AndyWaitingView *waiting = [[AndyWaitingView alloc] init];
     waiting.bounds = CGRectMake(0, 0, 100, 100);
     waiting.mode = AndyWaitingViewProgressMode;
     _waitingView = waiting;
     [self addSubview:waiting];
-    
     __weak AndyBrowserImageView *imageViewWeak = self;
-    
     [self sd_setImageWithURL:url placeholderImage:placeholder options:SDWebImageRetryFailed progress:^(NSInteger receivedSize, NSInteger expectedSize) {
         imageViewWeak.progress = (CGFloat)receivedSize / expectedSize;
-        
     } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
         [imageViewWeak removeWaitingView];
         if (error) {
@@ -113,10 +104,7 @@
             label.clipsToBounds = YES;
             label.textAlignment = NSTextAlignmentCenter;
             [imageViewWeak addSubview:label];
-        } else {
-            
-        }
-        
+        } else { }
     }];
 }
 
@@ -129,29 +117,23 @@
 }
 
 - (void)setTotalScale:(CGFloat)totalScale {
-    if ((_totalScale < 0.5 && totalScale < _totalScale) || (_totalScale > 2.0 && totalScale > _totalScale)) return; // 最大缩放 2倍,最小0.5倍
-    
+    if ((_totalScale < 0.5 && totalScale < _totalScale) || (_totalScale > 2.0 && totalScale > _totalScale)) return;
+    // 最大缩放 2倍,最小0.5倍
     [self zoomWithScale:totalScale];
 }
 
 - (void)zoomWithScale:(CGFloat)scale {
     _totalScale = scale;
-    
     _zoomingImageView.transform = CGAffineTransformMakeScale(scale, scale);
-    
     if (scale > 1) {
         CGFloat contentW = _zoomingImageView.frame.size.width;
         CGFloat contentH = MAX(_zoomingImageView.frame.size.height, self.frame.size.height);
-        
         _zoomingImageView.center = CGPointMake(contentW * 0.5, contentH * 0.5);
         _zoomingScroolView.contentSize = CGSizeMake(contentW, contentH);
-        
-        
         CGPoint offset = _zoomingScroolView.contentOffset;
         offset.x = (contentW - _zoomingScroolView.frame.size.width) * 0.5;
-        //        offset.y = (contentH - _zoomingImageView.frame.size.height) * 0.5;
+        // offset.y = (contentH - _zoomingImageView.frame.size.height) * 0.5;
         _zoomingScroolView.contentOffset = offset;
-        
     } else {
         _zoomingScroolView.contentSize = _zoomingScroolView.frame.size;
         _zoomingScroolView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);

@@ -2,17 +2,16 @@
 //  MainViewController.m
 //  myPicture
 //
+//  Author Andyjicw 479003573@qq.com
+//
 //  Created by andy on 16/4/29.
 //  Copyright © 2016年 andy. All rights reserved.
 //
 
 #import "MainViewController.h"
-
 #import "MenuViewController.h"
-
 #import "AndyPhotoBrowser.h"
 #import <MJRefresh.h>
-
 #import "POST.h"
 #import "AndyCacheManeger.h"
 
@@ -20,14 +19,14 @@
 
 @end
 
-static NSString *kcellIdentifier   = @"CollectionViewCell";
+static NSString *kcellIdentifier = @"CollectionViewCell";
 
-@interface MainViewController () <AndyPhotoBrowserDelegate,UICollectionViewDelegateFlowLayout,UICollectionViewDataSource>
+@interface MainViewController () <AndyPhotoBrowserDelegate, UICollectionViewDelegateFlowLayout, UICollectionViewDataSource>
 
-@property (nonatomic,strong) NSMutableArray     *models;
-@property (nonatomic,strong) NSMutableArray     *dataArr;
-@property long                                  selectIndex;
-@property int                                   page;
+@property (nonatomic,strong) NSMutableArray *models;
+@property (nonatomic,strong) NSMutableArray *dataArr;
+@property long                              selectIndex;
+@property int                               page;
 
 @end
 
@@ -38,21 +37,20 @@ static NSString *kcellIdentifier   = @"CollectionViewCell";
     
     self.models = [[NSMutableArray alloc] init];
     self.dataArr = [[NSMutableArray alloc] init];
-    
     self.page = 1;
     [self getDataFromDB];
     [self initUI];
     
 }
-- (void) getDataFromDB {
+- (void)getDataFromDB {
     
     DB *db = [[DB alloc] init];
     NSMutableArray *arr = [db DBGetTablePicture];
     [self toModel:arr];
     [self getDataFromNet];
 }
-- (void) setDataInDB:(id) result {
-    UIColor *xx = [UIColor redColor];
+- (void)setDataInDB:(id) result {
+    
     DB *db = [[DB alloc] init];
     if (_collection.mj_footer.isRefreshing) {
         [db DBSetTablePicture:result isDel:false];
@@ -60,7 +58,7 @@ static NSString *kcellIdentifier   = @"CollectionViewCell";
     }
     [db DBSetTablePicture:result isDel:true];
 }
-- (void) toModel:(id)result {
+- (void)toModel:(id)result {
     
     [_collection.mj_header endRefreshing];
     [_collection.mj_footer endRefreshing];
@@ -87,7 +85,7 @@ static NSString *kcellIdentifier   = @"CollectionViewCell";
     [self setDataInDB:result];
 }
 
-- (void) getDataFromNet {
+- (void)getDataFromNet {
     
     NSMutableDictionary *body = [[NSMutableDictionary alloc] init];
     [body setObject:[NSString stringWithFormat:@"%d", self.page] forKey:@"page"];
@@ -104,7 +102,7 @@ static NSString *kcellIdentifier   = @"CollectionViewCell";
           }];
 }
 
-- (void) myReloadData {
+- (void)myReloadData {
     [_collection reloadData];
 }
 
@@ -133,26 +131,26 @@ static NSString *kcellIdentifier   = @"CollectionViewCell";
 }
 
 #pragma mark -CollectionView datasource
-//section
+// section
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
     return 1;
 }
-//item个数
+// item个数
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     return self.models.count;
 }
 
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView
+                  cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     
     ImageModel *model = self.models[indexPath.row];
-    //重用cell
+    // 重用cell
     UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kcellIdentifier forIndexPath:indexPath];
-    //赋值
+    // 赋值
     UIImageView *imageView = (UIImageView *)[cell viewWithTag:1];
-    
     [imageView sd_setImageWithURL:[NSURL URLWithString:model.image] placeholderImage:[UIImage imageNamed:@"place"]];
     
-    //添加四个边阴影
+    // 添加四个边阴影
     imageView.layer.shadowColor = [UIColor blackColor].CGColor;
     imageView.layer.shadowOffset = CGSizeMake(0, 0);
     imageView.layer.shadowOpacity = 1.0;
@@ -160,31 +158,30 @@ static NSString *kcellIdentifier   = @"CollectionViewCell";
     
     cell.backgroundColor = [UIColor clearColor];
     return cell;
-    
 }
 
-//定义每个UICollectionViewCell 的大小
+// 定义每个UICollectionViewCell 的大小
 - (CGSize)collectionView:(UICollectionView *)collectionView
                   layout:(UICollectionViewLayout *)collectionViewLayout
   sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     return CGSizeMake((SCREEN_WIDTH - 8) / 3, 170 * DEVICE_HEIGHT_RATIO);
 }
-//定义每个Section 的 margin
+// 定义每个Section 的 margin
 -(UIEdgeInsets)collectionView:(UICollectionView *)collectionView
                        layout:(UICollectionViewLayout *)collectionViewLayout
        insetForSectionAtIndex:(NSInteger)section {
     return UIEdgeInsetsMake(0, 0, 0, 0);
 }
-//每个section中不同的行之间的行间距
+// 每个section中不同的行之间的行间距
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section {
     return 0.5;
 }
-//每个item之间的间距
+// 每个item之间的间距
 - (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     return 2;
 }
 
--(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     AndyPhotoBrowser *browser = [[AndyPhotoBrowser alloc] init];
     browser.currentImageIndex = 0;
     browser.imageCount = [[self.dataArr[indexPath.row] objectForKey:@"pic_count"] intValue];
@@ -201,13 +198,14 @@ static NSString *kcellIdentifier   = @"CollectionViewCell";
 }
 
 - (void)didReceiveMemoryWarning {
-    
     [super didReceiveMemoryWarning];
     if (self.isViewLoaded && !self.view.window) {
         self.view = nil;
     }
 }
+
 #pragma mark - showMenu
+
 - (void) showMenu {
     [self.mm_drawerController toggleDrawerSide:MMDrawerSideLeft animated:YES completion:nil];
 }

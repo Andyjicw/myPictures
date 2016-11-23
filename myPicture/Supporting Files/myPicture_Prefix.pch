@@ -2,6 +2,8 @@
 //  myPicture_Prefix.pch
 //  myPicture
 //
+//  Author Andyjicw 479003573@qq.com
+//
 //  Created by andy on 16/4/29.
 //  Copyright © 2016年 andy. All rights reserved.
 //
@@ -12,12 +14,10 @@
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
 #import <Availability.h>
-
 #import "DB.h"
 #import "URL.h"
 #import "POST.h"
 #import "UIImageView+WebCache.h"
-
 #import "MMDrawerController.h"
 #import "MMdrawerVisualState.h"
 #import "MMDrawerBarButtonItem.h"

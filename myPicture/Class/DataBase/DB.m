@@ -2,6 +2,8 @@
 //  DB.m
 //  myPicture
 //
+//  Author Andyjicw 479003573@qq.com
+//
 //  Created by andy on 16/5/14.
 //  Copyright © 2016年 andy. All rights reserved.
 //
@@ -11,14 +13,12 @@
 @implementation DB
 
 
--(NSMutableArray *) DBGetTablePicture {
-    
+-(NSMutableArray *)DBGetTablePicture {
     NSMutableArray *arr = [[NSMutableArray alloc] init];
-    DBManager *manager         = [DBManager shareInstance];
-    NSString *sql              = @"SELECT * FROM table_picture";
-    FMResultSet *result        = [manager.db executeQuery:sql];
-    while ([result next])
-    {
+    DBManager *manager  = [DBManager shareInstance];
+    NSString *sql       = @"SELECT * FROM table_picture";
+    FMResultSet *result = [manager.db executeQuery:sql];
+    while ([result next]) {
         NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
         [dic setObject:[result stringForColumn:@"pic_id"] forKey:@"pic_id"];
         [dic setObject:[result stringForColumn:@"set_name"] forKey:@"set_name"];
@@ -31,8 +31,7 @@
     return arr;
 }
 
--(BOOL) DBSetTablePicture:(NSArray *)arr isDel:(BOOL)isDel {
-    
+-(BOOL)DBSetTablePicture:(NSArray *)arr isDel:(BOOL)isDel {
     DBManager *manager = [DBManager shareInstance];
     if (isDel) {
         NSString *del = @"DELETE FROM table_picture;";
@@ -40,11 +39,8 @@
             NSLog(@"删除失败");
         }
     }
-    
     for (NSMutableDictionary *tmp in arr) {
-        
         NSString *sql = INSERT_TABLE_PICTURE;
-        
         if ([manager.db executeUpdate:sql,
              [tmp objectForKey:@"pic_id"],
              [tmp objectForKey:@"set_name"],
